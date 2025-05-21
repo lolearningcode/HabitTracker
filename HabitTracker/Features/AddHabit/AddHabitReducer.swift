@@ -45,9 +45,12 @@ struct AddHabitReducer: Reducer {
                 return .none
                 
             case .saveTapped:
+                let trimmed = state.name.trimmingCharacters(in: .whitespacesAndNewlines)
+                guard !trimmed.isEmpty else { return .none }
+                
                 let newHabit = Habit(
                     id: uuid(),
-                    name: state.name,
+                    name: trimmed,
                     createdAt: date(),
                     schedule: state.schedule,
                     completionLog: [],

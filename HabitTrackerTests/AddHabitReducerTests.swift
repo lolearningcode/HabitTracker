@@ -62,4 +62,17 @@ final class AddHabitReducerTests: XCTestCase {
             )
         )))
     }
+    
+    @MainActor
+    func test_saveTappedWithEmptyName_doesNotCreateHabit() async {
+        let store = TestStore(
+            initialState: AddHabitReducer.State(name: " "),
+            reducer: AddHabitReducer.init
+        ) {
+            $0.uuid = { UUID(uuidString: "00000000-0000-0000-0000-000000000000")! }
+            $0.date = { Date(timeIntervalSince1970: 0) }
+        }
+        
+        await store.send(.saveTapped)
+    }
 }
