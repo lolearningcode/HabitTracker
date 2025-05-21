@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum HabitSchedule: String, Codable, Equatable {
+enum HabitSchedule: Codable, Equatable {
     case daily
     case weekly([Weekday])
     case custom([Int]) // Every X days
