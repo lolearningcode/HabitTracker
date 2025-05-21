@@ -27,6 +27,7 @@ struct HabitListReducer: Reducer {
     
     @Dependency(\.habitClient) var habitClient
     @Dependency(\.mainQueue) var mainQueue
+    @Dependency(\.date) var date
     
     var body: some ReducerOf<Self> {
         Reduce { state, action in
@@ -51,7 +52,7 @@ struct HabitListReducer: Reducer {
                 if habit.isCompletedToday {
                     habit.completionLog.removeAll { cal.isDateInToday($0) }
                 } else {
-                    habit.completionLog.append(Date())
+                    habit.completionLog.append(date())
                 }
                 state.habits[idx] = habit
                 let habitToSave = habit

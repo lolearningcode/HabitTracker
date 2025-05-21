@@ -18,3 +18,14 @@ extension DependencyValues {
         set { self[MainQueueKey.self] = newValue }
     }
 }
+
+private enum DateKey: DependencyKey {
+    static let liveValue: @Sendable () -> Date = { @Sendable in Date() }
+}
+
+extension DependencyValues {
+    public var date: @Sendable () -> Date {
+        get { self[DateKey.self] }
+        set { self[DateKey.self] = newValue }
+    }
+}
