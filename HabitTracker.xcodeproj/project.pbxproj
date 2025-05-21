@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		AB64E7A22DDE1BEC00A5A2D3 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = AB64E7A12DDE1BEC00A5A2D3 /* ComposableArchitecture */; };
+		ABCF37842DDE92C300BAC3CD /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = ABCF37832DDE92C300BAC3CD /* ComposableArchitecture */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,7 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AB64E7A22DDE1BEC00A5A2D3 /* ComposableArchitecture in Frameworks */,
+				ABCF37842DDE92C300BAC3CD /* ComposableArchitecture in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -117,7 +117,7 @@
 			);
 			name = HabitTracker;
 			packageProductDependencies = (
-				AB64E7A12DDE1BEC00A5A2D3 /* ComposableArchitecture */,
+				ABCF37832DDE92C300BAC3CD /* ComposableArchitecture */,
 			);
 			productName = HabitTracker;
 			productReference = AB64E7742DDE1B1900A5A2D3 /* HabitTracker.app */;
@@ -202,7 +202,7 @@
 			mainGroup = AB64E76B2DDE1B1900A5A2D3;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				AB64E7A02DDE1BEC00A5A2D3 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
+				ABCF37822DDE92C300BAC3CD /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = AB64E7752DDE1B1900A5A2D3 /* Products */;
@@ -569,20 +569,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		AB64E7A02DDE1BEC00A5A2D3 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
+		ABCF37822DDE92C300BAC3CD /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.19.1;
+				kind = exactVersion;
+				version = 1.6.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		AB64E7A12DDE1BEC00A5A2D3 /* ComposableArchitecture */ = {
+		ABCF37832DDE92C300BAC3CD /* ComposableArchitecture */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = AB64E7A02DDE1BEC00A5A2D3 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
+			package = ABCF37822DDE92C300BAC3CD /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
 			productName = ComposableArchitecture;
 		};
 /* End XCSwiftPackageProductDependency section */

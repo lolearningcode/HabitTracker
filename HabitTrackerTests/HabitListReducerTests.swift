@@ -11,6 +11,7 @@ import Combine
 @testable import HabitTracker
 
 final class HabitListReducerTests: XCTestCase {
+    @MainActor
     func test_onAppearLoadsHabits() async {
         let mockHabit = Habit(
             id: UUID(uuidString: "00000000-0000-0000-0000-000000000001")!,
@@ -22,7 +23,7 @@ final class HabitListReducerTests: XCTestCase {
             archived: false
         )
         
-        let store = await TestStore(
+        let store = TestStore(
             initialState: HabitListReducer.State(),
             reducer: HabitListReducer.init
         ) {
@@ -43,6 +44,7 @@ final class HabitListReducerTests: XCTestCase {
         }
     }
     
+    @MainActor
     func test_toggleCompletion() async {
         let testDate = Date(timeIntervalSince1970: 1_689_000_000)
         let habitID = UUID(uuidString: "00000000-0000-0000-0000-000000000002")!
@@ -59,7 +61,7 @@ final class HabitListReducerTests: XCTestCase {
             archived: false
         )
         
-        let store = await TestStore(
+        let store = TestStore(
             initialState: HabitListReducer.State(habits: [testHabit]),
             reducer: HabitListReducer.init
         ) {
@@ -77,6 +79,7 @@ final class HabitListReducerTests: XCTestCase {
         XCTAssertEqual(savedHabit?.completionLog, [testDate])
     }
     
+    @MainActor
     func test_deleteHabit() async {
         let habitID = UUID(uuidString: "00000000-0000-0000-0000-000000000003")!
         var deletedHabitIDs: [UUID] = []
@@ -91,7 +94,7 @@ final class HabitListReducerTests: XCTestCase {
             archived: false
         )
         
-        let store = await TestStore(
+        let store = TestStore(
             initialState: HabitListReducer.State(habits: [testHabit]),
             reducer: HabitListReducer.init
         ) {
@@ -108,8 +111,9 @@ final class HabitListReducerTests: XCTestCase {
         XCTAssertEqual(deletedHabitIDs, [habitID])
     }
     
+    @MainActor
     func test_addButtonTappedPresentsAddHabitModal() async {
-        let store = await TestStore(
+        let store = TestStore(
             initialState: HabitListReducer.State(),
             reducer: HabitListReducer.init
         )
@@ -119,6 +123,7 @@ final class HabitListReducerTests: XCTestCase {
         }
     }
     
+    @MainActor
     func test_addHabitDelegateCreatesHabit() async {
         let habitID = UUID(uuidString: "00000000-0000-0000-0000-000000000004")!
         let createdHabit = Habit(
@@ -133,7 +138,7 @@ final class HabitListReducerTests: XCTestCase {
         
         var savedHabit: Habit? = nil
         
-        let store = await TestStore(
+        let store = TestStore(
             initialState: HabitListReducer.State(addHabit: AddHabitReducer.State()),
             reducer: HabitListReducer.init
         ) {

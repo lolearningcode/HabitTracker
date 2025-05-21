@@ -29,3 +29,14 @@ extension DependencyValues {
         set { self[DateKey.self] = newValue }
     }
 }
+
+private enum UUIDKey: DependencyKey {
+    static let liveValue: @Sendable () -> UUID = { @Sendable in UUID() }
+}
+
+extension DependencyValues {
+    var uuid: @Sendable () -> UUID {
+        get { self[UUIDKey.self] }
+        set { self[UUIDKey.self] = newValue }
+    }
+}

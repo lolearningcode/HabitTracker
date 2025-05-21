@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pointfreeco/swift-composable-architecture",
       "state" : {
-        "revision" : "b1d27a82b498b8e697acabd8cc01b585d26aab19",
-        "version" : "1.19.1"
+        "revision" : "ae491c9e3f66631e72d58db8bb4c27dfc3d3afd4",
+        "version" : "1.6.0"
       }
     },
     {
@@ -83,39 +83,21 @@
       }
     },
     {
-      "identity" : "swift-navigation",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/pointfreeco/swift-navigation",
-      "state" : {
-        "revision" : "db6bc9dbfed001f21e6728fd36413d9342c235b4",
-        "version" : "2.3.0"
-      }
-    },
-    {
-      "identity" : "swift-perception",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/pointfreeco/swift-perception",
-      "state" : {
-        "revision" : "d924c62a70fca5f43872f286dbd7cef0957f1c01",
-        "version" : "1.6.0"
-      }
-    },
-    {
-      "identity" : "swift-sharing",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/pointfreeco/swift-sharing",
-      "state" : {
-        "revision" : "75e846ee3159dc75b3a29bfc24b6ce5a557ddca9",
-        "version" : "2.5.2"
-      }
-    },
-    {
       "identity" : "swift-syntax",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/swiftlang/swift-syntax",
+      "location" : "https://github.com/apple/swift-syntax",
       "state" : {
-        "revision" : "f99ae8aa18f0cf0d53481901f88a0991dc3bd4a2",
-        "version" : "601.0.1"
+        "revision" : "64889f0c732f210a935a0ad7cda38f77f876262d",
+        "version" : "509.1.1"
+      }
+    },
+    {
+      "identity" : "swiftui-navigation",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/pointfreeco/swiftui-navigation",
+      "state" : {
+        "revision" : "e628806aeaa9efe25c1abcd97931a7c498fab281",
+        "version" : "1.5.5"
       }
     },
     {

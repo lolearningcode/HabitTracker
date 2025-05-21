@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CasePaths
 import ComposableArchitecture
 import SwiftUI
 
@@ -18,6 +19,7 @@ struct AddHabitReducer: Reducer {
     }
     
     // MARK: - Actions
+    @CasePathable
     enum Action: BindableAction, Equatable {
         case binding(BindingAction<State>)
         case saveTapped
