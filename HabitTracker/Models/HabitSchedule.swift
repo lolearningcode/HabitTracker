@@ -16,3 +16,5 @@ enum HabitSchedule: Codable, Equatable {
         case sunday = 1, monday, tuesday, wednesday, thursday, friday, saturday
     }
 }
+
+extension HabitSchedule: Hashable {}

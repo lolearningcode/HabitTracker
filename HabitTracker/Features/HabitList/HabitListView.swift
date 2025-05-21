@@ -48,6 +48,11 @@ struct HabitListView: View {
                     }
                 }
                 .onAppear { viewStore.send(.onAppear) }
+                .sheet(
+                    store: store.scope(state: \.$addHabit, action: \.addHabit)
+                ) { addHabitStore in
+                    AddHabitView(store: addHabitStore)
+                }
             }
         }
     }
