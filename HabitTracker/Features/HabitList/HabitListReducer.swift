@@ -49,17 +49,18 @@ struct HabitListReducer: Reducer {
             case let .toggleCompletion(id):
                 guard let idx = state.habits.firstIndex(where: { $0.id == id }) else { return .none }
                 let habit = state.habits[idx]
-                let cal = Calendar.current
                 
                 if habit.isCompletedToday {
                     return .none
                 }
                 
+                let completion = HabitCompletion(date: date(), habit: habit)
+                habit.completions.append(completion)
+                
                 return .run { send in
                     await habitDataService.addCompletion(for: habit)
-                    
-                    let updatedHabits = try await habitClient.fetch()
-                    await send(.habitsLoaded(updatedHabits))
+                    let updated = try await habitClient.fetch()
+                    await send(.habitsLoaded(updated))
                 }
                 
             case let .delete(indexSet):
