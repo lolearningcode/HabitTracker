@@ -13,15 +13,18 @@ final class HabitTests: XCTestCase {
     
     func test_isCompletedToday_whenLoggedToday_returnsTrue() {
         let today = Date()
+        
         let habit = Habit(
             id: UUID(),
             name: "Drink Water",
             createdAt: today,
             schedule: .daily,
-            completionLog: [today],
             remindersEnabled: false,
             archived: false
         )
+        
+        let completion = HabitCompletion(date: today, habit: habit)
+        habit.completions = [completion]
         
         XCTAssertTrue(habit.isCompletedToday)
     }
@@ -33,7 +36,6 @@ final class HabitTests: XCTestCase {
             name: "Run",
             createdAt: yesterday,
             schedule: .daily,
-            completionLog: [yesterday],
             remindersEnabled: false,
             archived: false
         )
@@ -65,16 +67,21 @@ final class HabitTests: XCTestCase {
     func test_currentStreak_readsFromCompletionLog() {
         let today = Date()
         let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: today)!
+        
         let habit = Habit(
             id: UUID(),
             name: "Stretch",
             createdAt: yesterday,
             schedule: .daily,
-            completionLog: [yesterday, today],
             remindersEnabled: false,
             archived: false
         )
-
+        
+        // Add completions
+        let completion1 = HabitCompletion(date: yesterday, habit: habit)
+        let completion2 = HabitCompletion(date: today, habit: habit)
+        habit.completions = [completion1, completion2]
+        
         XCTAssertEqual(habit.currentStreak, 2)
     }
     

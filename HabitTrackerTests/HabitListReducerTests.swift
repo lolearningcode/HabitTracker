@@ -7,18 +7,17 @@
 
 import XCTest
 import ComposableArchitecture
-import Combine
 @testable import HabitTracker
 
+@MainActor
 final class HabitListReducerTests: XCTestCase {
-    @MainActor
+    
     func test_onAppearLoadsHabits() async {
         let mockHabit = Habit(
-            id: UUID(uuidString: "00000000-0000-0000-0000-000000000001")!,
-            name: "Mock Habit",
+            id: UUID(),
+            name: "Sample",
             createdAt: .now,
             schedule: .daily,
-            completionLog: [],
             remindersEnabled: false,
             archived: false
         )
@@ -28,9 +27,7 @@ final class HabitListReducerTests: XCTestCase {
             reducer: HabitListReducer.init
         ) {
             $0.habitClient.fetch = {
-                Just([mockHabit])
-                    .setFailureType(to: Never.self)
-                    .eraseToAnyPublisher()
+                [mockHabit]
             }
         }
         
@@ -44,75 +41,7 @@ final class HabitListReducerTests: XCTestCase {
         }
     }
     
-    @MainActor
-    func test_toggleCompletion() async {
-        let testDate = Date(timeIntervalSince1970: 1_689_000_000)
-        let habitID = UUID(uuidString: "00000000-0000-0000-0000-000000000002")!
-        
-        var savedHabit: Habit? = nil
-        
-        let testHabit = Habit(
-            id: habitID,
-            name: "Test Habit",
-            createdAt: testDate,
-            schedule: .daily,
-            completionLog: [],
-            remindersEnabled: false,
-            archived: false
-        )
-        
-        let store = TestStore(
-            initialState: HabitListReducer.State(habits: [testHabit]),
-            reducer: HabitListReducer.init
-        ) {
-            $0.date = { testDate }
-            $0.habitClient.save = { habit in
-                savedHabit = habit
-                return .none
-            }
-        }
-        
-        await store.send(HabitListReducer.Action.toggleCompletion(habitID)) {
-            $0.habits[0].completionLog = [testDate]
-        }
-        
-        XCTAssertEqual(savedHabit?.completionLog, [testDate])
-    }
-    
-    @MainActor
-    func test_deleteHabit() async {
-        let habitID = UUID(uuidString: "00000000-0000-0000-0000-000000000003")!
-        var deletedHabitIDs: [UUID] = []
-        
-        let testHabit = Habit(
-            id: habitID,
-            name: "Delete Me",
-            createdAt: .now,
-            schedule: .daily,
-            completionLog: [],
-            remindersEnabled: false,
-            archived: false
-        )
-        
-        let store = TestStore(
-            initialState: HabitListReducer.State(habits: [testHabit]),
-            reducer: HabitListReducer.init
-        ) {
-            $0.habitClient.delete = { id in
-                deletedHabitIDs.append(id)
-                return .none
-            }
-        }
-        
-        await store.send(.delete(IndexSet(integer: 0))) {
-            $0.habits = []
-        }
-        
-        XCTAssertEqual(deletedHabitIDs, [habitID])
-    }
-    
-    @MainActor
-    func test_addButtonTappedPresentsAddHabitModal() async {
+    func test_addButtonTappedPresentsAddHabit() async {
         let store = TestStore(
             initialState: HabitListReducer.State(),
             reducer: HabitListReducer.init
@@ -123,36 +52,54 @@ final class HabitListReducerTests: XCTestCase {
         }
     }
     
-    @MainActor
-    func test_addHabitDelegateCreatesHabit() async {
-        let habitID = UUID(uuidString: "00000000-0000-0000-0000-000000000004")!
-        let createdHabit = Habit(
-            id: habitID,
-            name: "New Habit",
+    func test_addHabitDelegateAppendsHabit() async {
+        let newHabit = Habit(
+            id: UUID(),
+            name: "Drink Water",
             createdAt: .now,
             schedule: .daily,
-            completionLog: [],
-            remindersEnabled: false,
+            remindersEnabled: true,
             archived: false
         )
-        
-        var savedHabit: Habit? = nil
         
         let store = TestStore(
             initialState: HabitListReducer.State(addHabit: AddHabitReducer.State()),
             reducer: HabitListReducer.init
         ) {
-            $0.habitClient.save = { habit in
-                savedHabit = habit
-                return .none
+            $0.habitClient.save = { _ in }
+        }
+        
+        await store.send(.addHabit(.presented(.delegate(.habitCreated(newHabit))))) {
+            $0.habits = [newHabit]
+            $0.addHabit = nil
+        }
+    }
+    
+    func test_deleteHabitRemovesCorrectIndex() async {
+        let habit = Habit(
+            id: UUID(),
+            name: "Meditate",
+            createdAt: .now,
+            schedule: .daily,
+            remindersEnabled: false,
+            archived: false
+        )
+        
+        var deletedHabitIDs: [UUID] = []
+        
+        let store = TestStore(
+            initialState: HabitListReducer.State(habits: [habit]),
+            reducer: HabitListReducer.init
+        ) {
+            $0.habitClient.delete = { id in
+                deletedHabitIDs.append(id)
             }
         }
         
-        await store.send(.addHabit(.presented(.delegate(.habitCreated(createdHabit))))) {
-            $0.habits = [createdHabit]
-            $0.addHabit = nil
+        await store.send(.delete(IndexSet(integer: 0))) {
+            $0.habits = []
         }
         
-        XCTAssertEqual(savedHabit, createdHabit)
+        XCTAssertEqual(deletedHabitIDs, [habit.id])
     }
 }

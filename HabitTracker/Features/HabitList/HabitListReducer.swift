@@ -5,8 +5,9 @@
 //  Created by Cleo Howard on 5/21/25.
 //
 
-import ComposableArchitecture
 import Foundation
+import ComposableArchitecture
+import SwiftData
 
 struct HabitListReducer: Reducer {
     struct State: Equatable {
@@ -28,6 +29,7 @@ struct HabitListReducer: Reducer {
     @Dependency(\.habitClient) var habitClient
     @Dependency(\.mainQueue) var mainQueue
     @Dependency(\.date) var date
+    @Dependency(\.habitDataService) var habitDataService
     
     var body: some ReducerOf<Self> {
         Reduce { state, action in
@@ -35,9 +37,8 @@ struct HabitListReducer: Reducer {
             case .onAppear:
                 state.isLoading = true
                 return .run { send in
-                    for await habits in habitClient.fetch().values {
-                        await send(.habitsLoaded(habits))
-                    }
+                    let habits = try await habitClient.fetch()
+                    await send(.habitsLoaded(habits))
                 }
                 
             case let .habitsLoaded(habits):
@@ -47,21 +48,24 @@ struct HabitListReducer: Reducer {
                 
             case let .toggleCompletion(id):
                 guard let idx = state.habits.firstIndex(where: { $0.id == id }) else { return .none }
-                var habit = state.habits[idx]
+                let habit = state.habits[idx]
                 let cal = Calendar.current
+                
                 if habit.isCompletedToday {
-                    habit.completionLog.removeAll { cal.isDateInToday($0) }
-                } else {
-                    habit.completionLog.append(date())
+                    return .none
                 }
-                state.habits[idx] = habit
-                let habitToSave = habit
-                return .run { _ in _ = habitClient.save(habitToSave) }
+                
+                return .run { send in
+                    await habitDataService.addCompletion(for: habit)
+                    
+                    let updatedHabits = try await habitClient.fetch()
+                    await send(.habitsLoaded(updatedHabits))
+                }
                 
             case let .delete(indexSet):
                 let ids = indexSet.map { state.habits[$0].id }
                 state.habits.remove(atOffsets: indexSet)
-                return .merge(ids.map { id in .run { _ in _ = habitClient.delete(id) } })
+                return .merge(ids.map { id in .run { _ in _ = try await habitClient.delete(id) } })
                 
             case .addButtonTapped:
                 state.addHabit = AddHabitReducer.State()
@@ -70,7 +74,7 @@ struct HabitListReducer: Reducer {
             case let .addHabit(.presented(.delegate(.habitCreated(habit)))):
                 state.habits.append(habit)
                 state.addHabit = nil
-                return .run { _ in _ = habitClient.save(habit) }
+                return .run { _ in _ = try await habitClient.save(habit) }
                 
             case .addHabit:
                 return .none
@@ -79,5 +83,13 @@ struct HabitListReducer: Reducer {
         .ifLet(\.$addHabit, action: \.addHabit) {
             AddHabitReducer()
         }
+    }
+}
+
+extension HabitListReducer.State {
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.habits == rhs.habits &&
+        lhs.addHabit == rhs.addHabit &&
+        lhs.isLoading == rhs.isLoading
     }
 }

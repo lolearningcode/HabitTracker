@@ -7,14 +7,26 @@
 
 import Foundation
 
-enum HabitSchedule: Codable, Equatable {
+enum HabitScheduleType: String, Codable {
     case daily
-    case weekly([Weekday])
-    case custom([Int]) // Every X days
+    case weekly
+    case custom
+}
 
-    enum Weekday: Int, Codable, CaseIterable {
+struct HabitSchedule: Codable, Hashable {
+    var type: HabitScheduleType
+    var weekdays: [Int] = []
+    var customDays: [Int] = []
+    
+    static let daily = HabitSchedule(type: .daily)
+    static func weekly(_ days: [HabitSchedule.Weekday]) -> HabitSchedule {
+        .init(type: .weekly, weekdays: days.map(\.rawValue))
+    }
+    static func custom(_ days: [Int]) -> HabitSchedule {
+        .init(type: .custom, customDays: days)
+    }
+    
+    enum Weekday: Int, CaseIterable {
         case sunday = 1, monday, tuesday, wednesday, thursday, friday, saturday
     }
 }
-
-extension HabitSchedule: Hashable {}

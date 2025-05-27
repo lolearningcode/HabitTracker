@@ -53,7 +53,6 @@ struct AddHabitReducer: Reducer {
                     name: trimmed,
                     createdAt: date(),
                     schedule: state.schedule,
-                    completionLog: [],
                     remindersEnabled: state.remindersEnabled,
                     archived: false
                 )
