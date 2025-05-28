@@ -34,14 +34,6 @@ A modern habit tracking app built using [The Composable Architecture (TCA)](http
 - Reducer-driven navigation and feature composition
 - Test-driven reducer validation
 
-## 📷 Screenshots
-
-| Habit List | Add Habit Modal | Completion Toggle |
-|------------|------------------|-------------------|
-| ![List](docs/list.png) | ![Add](docs/add.png) | ![Toggle](docs/toggle.png) |
-
-> *Screenshots coming soon*
-
 ## 🧰 Tech Stack
 
 - Swift 5.10+
